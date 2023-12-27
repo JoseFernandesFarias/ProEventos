@@ -45,8 +45,10 @@ COMEÇANDO COM O GIT
 vá para o diretorio principal no caso do curso ProEventos
 crie um arquivo gitignore
 dÊ o comando "git init" para iniciar o git
-
-
+dê o comando "git add ." o ponto adiciona tudo que está na pasta se existir alguma pasta vazia ele não adiciona.
+"git commit " para comitar sua branch local
+git remote add origin https://github.com/JoseFernandesFarias/ProEventos.git para acessar remotamente o git no repositorio escolhido
+git push -u origin master para enviar os documentos para a branch master
 instalar o pacote EntityFramework
 dotnet tool install --global dotnet-ef
 dotnet tool install --global dotnet-ef --version 5.0.2 (para instalar uma versão específica do EntityFramework)
