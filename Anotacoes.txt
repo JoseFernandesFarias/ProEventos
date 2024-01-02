@@ -69,6 +69,38 @@ Selecione "OmniSharp: Select Project"
 Selecione "OmniSharp: Proeventos.csproj ex"
 Selecione "OmniSharp: Restar OmniSharp"
 
+COMANDOS DOTNET PARA LISTAR E INSTALAR O ENTITY FRAMEWORK
+Comandos dotnet para listar os pacotes 
+"Se existir o EntityFramework ele mostra"
+dotnet list tool --global
+Para instalar.
+dotnet tool install --global dotnet-ef ele vai instalar a ultima versão do EntityFramework
+dotnet tool install --global dotnet-ef --version "5.0.2" instala uma versão específica do EntityFramework
+
+PARA INSTALAR O PACOTE ENTITYFRAMWORK REFERÊNCIAS PARA HABILITAR NOSSOS PROJETOS DOTNET COM ENTITYFRAMWORK.
+Ctrl+shift+P e na caixa de comando digitar "Nuget Gallery"
+Vai abrir a lista dos pacotes e vc digita "EntityFramework Core"
+Aparece "Microsoft.EntityFrameworkCore" seleciona ele.
+Instalar os pacotes
+Para SqlLite
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.Sqlite
+Microsoft.EntityFrameworkCore.Design
+Microsoft.EntityFrameworkCore.Tools 
+Para Sql Server
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Design
+Microsoft.EntityFrameworkCore.Tools 
+Comando Configuration.GetConnectionString("Default")
+para funcionar precisar referenciar no exemplo "Default" a chave ConnectionStrings em
+appsettings.Development.json (desenvolvimento) ou appsettings.json (produção);
+OBSERVAÇÃO : DEVE CRIAR A CHAVE EM PLURAL "ConnectionStrings" senão o comando abaixo
+Configuration.GetConnectionString("Default") 
+Não consegue achar a chave "ConnectionStrings"
+
+
+
 Comandos EF Entity FrameWork MIGRATIONS/DATABASE
 no fim de cada comando -h (help do comando em questão)
 Dotnet ef migrations add init - cria uma migration de nome init
