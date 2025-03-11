@@ -1,0 +1,311 @@
+Preferences (mudar "pasta\pasta")
+CTRL+SHIFT+P
+digite "Preferences"
+clicar em "Preferences : Settings"
+digite "compact" até aparecer "Explorer:Compact Folders"
+na opção Explorer: Compact Folders desmarque essa opção
+
+para criar um global.json
+dotnet new globaljson --sdk version 5.0.402
+se você colocar o "--force" conforme o exemplo abaixo:
+dotnet new globaljson --sdk version 5.0.402 --foce
+se o arquivo .json já existir eles substitui por um novo conforme o comando acima.
+
+
+para listar todas as ferramentas
+dotnet tool install list --global
+
+COMO É ESTRUTURADO UM PROJETO .NET Core
+Existem 2 arquivos 
+"appsettings.development.json" são  confiurações usadas quando o projeto roda em desenvolvimento
+"appsettings.json" são configurações usadas quando o projeto roda em produção
+Esses arquivos são chamados no método Main no Program.cs e esse método
+chama o CreateHostBuilder que recebe vários argumentos (ele injeta ICOnfiguration e ILoggerFactory no startup.cs)
+
+O Startup.cs tem os métodos: ConfigureServices e Configure
+No ConfigureServices ele tem o método services.AddControllers()
+No Confiure ele tem os métodos app.UseRouting e app.UseEndpoints.
+Para subir as controllers ele usa services.AddControllers;
+Uma controller é chamada pelo método app.UseRouting e ele devolve a informação pelo método app.UseEndpoints
+No método ConfigureServices existe a chamada services.AddSwaggerAgent que configura o AddSwaggerAgent
+No método Configure existe o if(en.IsDevelopment) onde em caso de desenvolvimento é chamado
+App.UseSwagger e o App.UseSwaggerUI que configura o swagger e roda no browser e também exibe o contrato (json) do swagger
+No Appsettings.Development.json
+Tem algumas configurações e uma delas é a "Microsoft" : "Warning"
+Existe o arquivo launchSettings.json
+na configuração nesse arquivo "enviromentVariables" : "ASPNETCORE_ENVIROMENT": "Development"
+É nessa configuração que ele roda ou desenvolvimento o produção
+LaunchBrowser: true roda o projeto .net abrindo o browser
+LaunchUrl : "swagger" depois que subiu o projeto vai para o swagger.
+"applicationUrl" - mostra os dois caminhos com ou sem HTTPs exemplo:"https://localhost:7163;http://localhost:5045"
+
+ESSE COMANDO GERA UM CERTIFICADO PARA O PROJETO RODAR HTTPS
+dotnet dev-certs https --trust
+ 
+
+Se vc muda por exemplo para "Microsoft" : "Information"
+Ele traz informações no command sobre a chamada de uma controller que foi chamada.
+
+
+COMEÇANDO COM O GIT 
+vá para o diretorio principal no caso do curso ProEventos
+crie um arquivo gitignore
+dÊ o comando "git init" para iniciar o git
+dê o comando "git add ." o ponto adiciona tudo que está na pasta se existir alguma pasta vazia ele não adiciona.
+"git commit " para comitar sua branch local
+git remote add origin https://github.com/JoseFernandesFarias/ProEventos.git para acessar remotamente o git no repositorio escolhido
+git push -u origin master para enviar os documentos para a branch master
+instalar o pacote EntityFramework
+dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-ef --version 5.0.2 (para instalar uma versão específica do EntityFramework)
+
+para instalar o Entity no Projeto
+ctrl+shift+p
+digitar: nuget: open nuget gallery
+
+escolher esses pacotes:
+	Microsoft.EntityFrameworkCore
+	Microsoft.EntityFrameworkCore.Design
+	Microsoft.EntityFrameworkCore.Sqlite ou ".SqlServer para SqlServer
+	Microsoft.EntityFrameworkCore.Tools
+
+Quando o OMNISharp não está funcionando Ex:. (DbContext clica com ctrl+. e não vem o "using EntityFrameWorkCore")
+ctrl+shit+p
+Selecione "OmniSharp: Select Project"
+Selecione "OmniSharp: Proeventos.csproj ex"
+Selecione "OmniSharp: Restar OmniSharp"
+
+COMANDOS DOTNET PARA LISTAR E INSTALAR O ENTITY FRAMEWORK
+Comandos dotnet para listar os pacotes 
+"Se existir o EntityFramework ele mostra"
+dotnet list tool --global
+Para instalar.
+dotnet tool install --global dotnet-ef ele vai instalar a ultima versão do EntityFramework
+dotnet tool install --global dotnet-ef --version "5.0.2" instala uma versão específica do EntityFramework
+
+PARA INSTALAR O PACOTE ENTITYFRAMWORK REFERÊNCIAS PARA HABILITAR NOSSOS PROJETOS DOTNET COM ENTITYFRAMWORK.
+Ctrl+shift+P e na caixa de comando digitar "Nuget Gallery"
+Vai abrir a lista dos pacotes e vc digita "EntityFramework Core"
+Aparece "Microsoft.EntityFrameworkCore" seleciona ele.
+Instalar os pacotes
+Para SqlLite
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.Sqlite
+Microsoft.EntityFrameworkCore.Design
+Microsoft.EntityFrameworkCore.Tools 
+Para Sql Server
+Microsoft.EntityFrameworkCore
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Design
+Microsoft.EntityFrameworkCore.Tools 
+Comando Configuration.GetConnectionString("Default")
+para funcionar precisar referenciar no exemplo "Default" a chave ConnectionStrings em
+appsettings.Development.json (desenvolvimento) ou appsettings.json (produção);
+OBSERVAÇÃO : DEVE CRIAR A CHAVE EM PLURAL "ConnectionStrings" senão o comando abaixo
+Configuration.GetConnectionString("Default") 
+Não consegue achar a chave "ConnectionStrings"
+
+
+
+Comandos EF Entity FrameWork MIGRATIONS/DATABASE
+no fim de cada comando -h (help do comando em questão)
+Dotnet ef migrations add init - cria uma migration de nome init
+dotnet ef migrations add init -o Data/Migrations (cria uma migration de nome init e "-o" output e "Data/Migrations" o caminho onde será criada.)
+dotnet ef database update (cria o banco de dados ou atualiza com novas migrations)
+QUANDO O MIGRATIONS estiver num projeto que não seja projeto .NetCore ou .NetFramework deve rodar assim
+dotnet ef database update -s ..\ProEventos.Api\ProEventos.Api.csproj onde "ProEvento.Api.csproj" é o projeto .NetCore
+se as migrations estivessem já no projeto .NetCore ou .NetFramework não precisaria do "-s ProEventos.Api"
+
+
+QUANDO TEM VÁRIOS PROJETOS PARA CRIAR O MIGRATIONS SENDO MAIS DE UM PROJETO
+OBS:(precisa rodar migrations dentro do projeto que possui o context) 
+dotnet ef migrations add Init -p ProEventos.Persistence.csproj -s ..\ProEventos.api\ProEventos.api.csproj
+o comando "-p" informa para o Entity qual é o projeto que possui o DbContext
+o comando "-s" informa para o Entity qual é o projeto ".Net Core" ou ".Net framework"
+por que o EntityFramework precisa de um projeto .Net Framework ou um projeto .NEt Core ele
+não roda num projeto Standard como o Classlib que é um projeto Standard.
+OBS:
+    Se o projeto que possui as migrations der erro reclamando por exemplo:
+    "o namespace "Migration" não pode ser encontrado"
+    "O nome do tipo ou do namespace "MigrationBuilder" não pode ser encontrado"
+É POR QUE O PROJETO QUE POSSUI O DATACONTEXT  não possui a referência do pacote EntityFrameWorkCore.Tools:
+"<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.2" />"
+É preciso incluir esse pacote para poder compilar o projeto que tem o context quando já possui as Migrations.
+
+Comandos para setar nome do usuário e email do usuario no git
+git init
+git config --global user.name "JoseFernandesFarias"
+git config --global user.email josefernandes34sp@gmail.com ou "josefernandes34sp@gmail.com"
+
+PARA VER VERSÕES DO NOTE
+nvm list
+
+COMANDOS DO DOTNETCLI "DOTNET"
+dotnet new "traz todos os modelos de projetos do .net"
+dotnet new webapi -n ProEvento-API "cria um novo projeto do tipo webapi com o nome ProEventos-API"
+dotnet run "Roda o projeto"
+dotnet watch run "roda o projeto e se houver alguma alteração com ele rodando ele atualiza automaticamente"
+
+PARA CRIAR UM NOVO PROJETO ANGULAR
+ng new ProEvento-App
+
+PARA RODAR O PROJETO ANGULAR
+npm start ou npm run start 
+(ele vai rodar os comandos que estão no arquivo package.json do seu projeto na seção "Scripts")
+ng serve ele roda o projeto mas precisa clicar no link que ele passa "http://localhost:4200"
+ng serve -o ele já abre o browser.
+
+QUANDO O PROJETO INICIA
+Ele vai te perguntar se vc vai querer que ele rode o ng analitics
+Se vc colocar "Y" no arquivo angular.json no final o comando abaixo
+,
+  "cli": {
+    "analytics": "8ba7301f-dc0c-4713-922d-1ff056db576c"
+  }
+
+Se você colocar "N" ele vai colocar no final do arquivo o comando abaixo,
+  "cli": {
+    "analytics": false
+  }
+
+DO DECORATOR DO COMPONENTE ANGULAR
+pode usar templateUrl: './app.component.html' ou template : `<h1>Olá Mundo</h1>`
+
+CRIANDO COMPONENTES NO ANGULAR
+Pode ser assim ng generate component Eventos ou ng g c Eventos
+Pode user o menu suspenso do VsCode e clicar em "Generate Component"
+a diferença entre ng g c Eventos na linha de comando e do Generate Component no menu suspenso
+é que na linha de comando ele cria com o arquivo "SCSS" pois é padrão do projeto e o menu suspenso
+ele cria com "CSS" é só mudar de "CSS" para "SCSS"
+
+PARA INSTALAR UMA VERSÃO ESPECÍFICA DO ANGULAR
+comando original
+npm install -g @angular-cli
+comando para uma versão específica
+npm install -g @angular/cli@14.0.0 "14.0.0" é a versão específica.
+
+ATENÇÃO AO COMANDO "npm install ngx-bootstrap --save"
+veja na documentação do ngx-bootstrap se o mesmo não contempla a versão do angular do projeto
+ele costuma dá erro.
+Para rodar ele precisa ser uma versão do angular contemplada por ele.
+
+ATENÇÃO AO COMANDO "ng add ngx-bootstrap"
+veja na documentação do ngx-bootstrap se o mesmo não contempla a versão do angular do projeto
+ele costuma dá erro.
+para contornar digite diretamente no syte.scss no src\style.scss ou style.CSS
+COLOCAR NA MÃO
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+
+comando "ng add ngx-bootstrap" quando a versão do angular é compativel.
+ele faz isso
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";
+
+/* Importing Datepicker SCSS file. */
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+O MÓDULO "BrowserAnimationsModule"
+se o ngx-bootstrap estiver em conforme com sua versão ele é incluído automaticamente
+se não estiver precisa colocar na mão no app.modules.ts na seção "imports"
+
+DIRETIVAS ESTRUTURAIS
+*ngIf
+*ngFor
+*ngShow
+
+BINDINGS
+{{eventos}}
+
+INTERPOLAÇÃO
+{{eventos[0].imagemURL}}
+
+PIPE 
+{{eventos | json}} o pipe é o traço na vertical
+quando faz isso "{{eventos | json}}" ele traz toda a lista de eventos
+formatados no padrão json. No "{{}}" vc pode aplicar código javascript
+
+PARA USER O INLINE 
+dentro do arquivo html do compoente 
+exemplo
+
+"form.form-inline>.form-group.mb-2" 
+ao dá um "TAB"
+form. - criar um objeto form
+.form-inline> - será a class="form-inline" após o ">" ficará dentro do form
+.form-group - criará uma div com a classe "form-group e mb2"
+
+Outros exemplos
+input.form-control.mr2[placeholder=buscar] -input tipo texto com a class=form-control mr2 e placeholder="buscar"
+btn.btn.btn-outline-success - button com class="btn btn-outline-success"
+
+THEAD NO BOOTSTRAP 5
+class="thead-dark" não funciona troque por class="table-dark"
+
+MAIS EXEMPLOS DE MONTAGEM DE TAGS html
+tfoot>tr>td[colspan=8]
+vai ficar assim
+  <tfoot>
+    <tr>
+      <td colspan="8"></td>
+    </tr>
+  </tfoot>
+
+1 — Teclas de seleção/Multi Cursor
+Essas foram as que mais me impressionaram quando conheci, com elas você pode fazer a mesma coisa em vários lugares do arquivo, digitando só uma vez e poupando seu tempo selecionando vários trechos de código:
+
+Alt + Click: Insere um cursor
+
+Shift+Alt+↑/ ↓: Insere um cursor na mesma posição da linha de cima ou na linha de baixo.
+
+Shift+Alt+I: Insere um cursor no final de cada linha selecionada.
+
+Ctrl+Shift+L: Adiciona um cursor no final de todas as ocorrências da seleção atual.
+
+2 —Edição de texto
+Também muito úteis, alguns já conhecido de outros editores mais simples:
+
+CTRL + /: Comenta todas as linhas selecionadas, com comentário de linha. Pode ser usado para remover os comentários também.
+
+Ctrl+Shift+A: Comenta o bloco de código selecionado, com comentário de bloco. Pode ser usado para remover os comentários também.
+
+Ctrl+Shift+K: Deleta a linha, sem precisar seleciona-la.
+
+3 — Geral
+Mais úteis para navegar pela ferramenta:
+
+Ctrl+P: Busca rápida de arquivos.
+
+F1: Abre a paleta de comandos.
+
+Ctrl + Shift + X: Exibe as extensões e possibilida instalar novas extensões.
+
+Ctrl+Shift+`: Abre/Fecha o terminal
+
+Alt+ seta pra cima ou para baixo move toda linda para onde você desejar.
+
+Existem várias outras teclas de atalho que podem ser úteis pra você, aqui é um resumo das que eu mais utilizo e que realmente sinto uma grande diferença. Por isso, não se esqueça de dar uma olhada nos outros comandos no arquivo que deixei lá encima.
+
+Deixe comentários caso tenha mais dicas de VS Code, ou caso tenha alguma tecla de atalho que você acha super da hora e que eu não coloquei aqui.
+
+PROPRIEDADE BINDINGS OR PROPERTY BINDINGS
+[style.width.px]="imagemLargura"
+[style.margin.px]="margemImagem"
+O que está dentro dos [] são property BINDINGS.
+
+CONTROLLER
+COM Task<IActionResult> GetById(int id) você pode usar os métodos
+NotFound("texto") , ok , etc 
+COM Task<ActionResult<Evento>> GetById(int id)você pode usar os métodos
+NotFound("texto") , ok , etc tendo tipado o Evento por exemplo.
+
+chamadas
+[HttpGet("{id}")] e [HttpGet("{tema}")] ele (o C#) não faz muita distinção de rota
+ele acaba chamando o método GetById(int id) 
+
+[HttpGet("{id}")] e [HttpGet("{tema}/tema")] aí ele (o C#) faz muita distinção de rota
+ele acaba chamando o método certo GetByTema(string tema)
