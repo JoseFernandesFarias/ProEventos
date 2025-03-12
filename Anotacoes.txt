@@ -79,6 +79,7 @@ COMANDOS DOTNET PARA LISTAR E INSTALAR O ENTITY FRAMEWORK
 Comandos dotnet para listar os pacotes 
 "Se existir o EntityFramework ele mostra"
 dotnet list tool --global
+dotnet tool list --global
 Para instalar.
 dotnet tool install --global dotnet-ef ele vai instalar a ultima versão do EntityFramework
 dotnet tool install --global dotnet-ef --version "5.0.2" instala uma versão específica do EntityFramework
